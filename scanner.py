@@ -17,8 +17,8 @@ for symbol in symbols:
             progress=False
         )
 
-        if not df.empty:
-            close = float(df["Close"].iloc[-1])
+        if len(df) > 0:
+            close = df["Close"].values[-1]
             print(f"{symbol}: {close}")
 
     except Exception as e:
