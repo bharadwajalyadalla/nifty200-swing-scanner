@@ -1,11 +1,10 @@
-import pandas as pd
 import yfinance as yf
-from ta.trend import EMAIndicator, MACD
-from ta.momentum import RSIIndicator
+import pandas as pd
 
 symbol = "INFY.NS"
 
-# Daily data
+print(f"Downloading data for {symbol}...")
+
 daily = yf.download(
     symbol,
     period="1y",
@@ -14,44 +13,28 @@ daily = yf.download(
     progress=False
 )
 
-daily["EMA100"] = EMAIndicator(daily["Close"], window=100).ema_indicator()
-daily["EMA200"] = EMAIndicator(daily["Close"], window=200).ema_indicator()
-daily["RSI"] = RSIIndicator(daily["Close"], window=14).rsi()
+print("\n===== DATAFRAME INFO =====")
+print("Type of daily:", type(daily))
 
-print("DAILY")
+print("\n===== COLUMNS =====")
+print(daily.columns)
 
-print("Close:", round(daily["Close"].iloc[-1], 2))
-print("EMA100:", round(daily["EMA100"].iloc[-1], 2))
-print("EMA200:", round(daily["EMA200"].iloc[-1], 2))
-print("RSI:", round(daily["RSI"].iloc[-1], 2))
+print("\n===== CLOSE COLUMN TYPE =====")
+print(type(daily["Close"]))
 
-# 30 minute data
-intraday = yf.download(
-    symbol,
-    period="60d",
-    interval="30m",
-    auto_adjust=True,
-    progress=False
-)
+print("\n===== CLOSE COLUMN SHAPE =====")
+print(daily["Close"].shape)
 
-intraday["EMA100"] = EMAIndicator(intraday["Close"], window=100).ema_indicator()
-intraday["EMA200"] = EMAIndicator(intraday["Close"], window=200).ema_indicator()
+print("\n===== FIRST 5 ROWS =====")
+print(daily.head())
 
-macd = MACD(intraday["Close"])
+print("\n===== LAST 5 ROWS =====")
+print(daily.tail())
 
-intraday["MACD"] = macd.macd()
-intraday["SIGNAL"] = macd.macd_signal()
+print("\n===== LAST CLOSE =====")
 
-intraday["RSI"] = RSIIndicator(
-    intraday["Close"],
-    window=14
-).rsi()
-
-print("\n30 MIN")
-
-print("Close:", round(intraday["Close"].iloc[-1], 2))
-print("EMA100:", round(intraday["EMA100"].iloc[-1], 2))
-print("EMA200:", round(intraday["EMA200"].iloc[-1], 2))
-print("RSI:", round(intraday["RSI"].iloc[-1], 2))
-print("MACD:", round(intraday["MACD"].iloc[-1], 2))
-print("Signal:", round(intraday["SIGNAL"].iloc[-1], 2))
+try:
+    close = daily["Close"].squeeze().iloc[-1]
+    print(close)
+except Exception as e:
+    print("ERROR:", e)
