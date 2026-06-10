@@ -1,0 +1,6 @@
+{
+  "capital": 50000,
+  "risk_percent": 1,
+  "active_position_allowed": 1,
+  "minimum_score": 85
+}
