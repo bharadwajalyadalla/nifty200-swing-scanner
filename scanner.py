@@ -1,25 +1,13 @@
-import pandas as pd
 import yfinance as yf
 
-stocks = pd.read_csv("data/nifty200.csv")
+symbol = "INFY.NS"
 
-symbols = stocks["symbol"].tolist()
+df = yf.download(
+    symbol,
+    period="1mo",
+    interval="1d",
+    auto_adjust=False,
+    progress=False
+)
 
-print(f"Loaded {len(symbols)} stocks")
-
-for symbol in symbols:
-    try:
-        df = yf.download(
-            symbol,
-            period="5d",
-            interval="30m",
-            auto_adjust=True,
-            progress=False
-        )
-
-        if len(df) > 0:
-            close = df["Close"].values[-1]
-            print(f"{symbol}: {close}")
-
-    except Exception as e:
-        print(f"{symbol}: Error {e}")
+print(df.tail())
